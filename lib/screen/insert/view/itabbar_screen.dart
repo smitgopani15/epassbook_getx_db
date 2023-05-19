@@ -1,32 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:incomeexpense_getx_db/screen/add/view/expense_screen.dart';
-import 'package:incomeexpense_getx_db/screen/add/view/income_screen.dart';
+import 'package:incomeexpense_getx_db/screen/home/controller/home_controller.dart';
+import 'iexpense_screen.dart';
+import 'iincome_screen.dart';
 
-class TabbarScreen extends StatefulWidget {
-  const TabbarScreen({Key? key}) : super(key: key);
+class ITabbarScreen extends StatefulWidget {
+  const ITabbarScreen({Key? key}) : super(key: key);
 
   @override
-  State<TabbarScreen> createState() => _TabbarScreenState();
+  State<ITabbarScreen> createState() => _ITabbarScreenState();
 }
 
-class _TabbarScreenState extends State<TabbarScreen> {
-  dynamic index = Get.arguments;
+class _ITabbarScreenState extends State<ITabbarScreen> {
+  HomeController homeController = Get.put(
+    HomeController(),
+  );
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      initialIndex: index,
+      initialIndex: homeController.iindex.value,
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black,
-            title: Text(
-              "Income",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
+            title: Obx(
+              () => Text(
+                homeController.iindex.value == 0
+                    ? "Insert Income"
+                    : "Insert Expense",
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -103,8 +110,8 @@ class _TabbarScreenState extends State<TabbarScreen> {
               Expanded(
                 child: TabBarView(
                   children: [
-                    IncomeScreen(),
-                    ExpenseScreen(),
+                    IIncomeScreen(),
+                    IExpenseScreen(),
                   ],
                 ),
               ),

@@ -3,28 +3,28 @@ import 'package:get/get.dart';
 import 'package:incomeexpense_getx_db/screen/home/controller/home_controller.dart';
 import 'package:incomeexpense_getx_db/utils/db_helper.dart';
 
-class IncomeScreen extends StatefulWidget {
-  const IncomeScreen({Key? key}) : super(key: key);
+class UDIncomeScreen extends StatefulWidget {
+  const UDIncomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<IncomeScreen> createState() => _IncomeScreenState();
+  State<UDIncomeScreen> createState() => _UDIncomeScreenState();
 }
 
-class _IncomeScreenState extends State<IncomeScreen> {
+class _UDIncomeScreenState extends State<UDIncomeScreen> {
+  HomeController homeController = Get.put(
+    HomeController(),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    homeController.readData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = DateTime.now();
-
-    TextEditingController datec = TextEditingController(
-      text: dateTime != null
-          ? "${dateTime.day}/0${dateTime.month}/${dateTime.year}"
-          : "${DateTime.now().day}/0${DateTime.now().month}/${DateTime.now().year}",
-    );
     TextEditingController amountc = TextEditingController();
     TextEditingController notec = TextEditingController();
-    HomeController homeController = Get.put(
-      HomeController(),
-    );
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -73,51 +73,66 @@ class _IncomeScreenState extends State<IncomeScreen> {
                         SizedBox(
                           height: 10,
                         ),
-                        TextField(
-                          controller: datec,
-                          cursorColor: Colors.black,
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 18,
+                        Container(
+                          height: 61,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: Colors.black,
+                              width: 1,
+                            ),
                           ),
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            prefixIcon: IconButton(
-                              onPressed: () async {
-                                DateTime? date = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(2000),
-                                  lastDate: DateTime(3000),
-                                ).then((value) {
-                                  setState(() {
-                                    dateTime = value!;
-                                  });
-                                });
-                              },
-                              icon: Icon(
-                                Icons.calendar_month,
-                                color: Colors.black,
-                                size: 28,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: () async {
+                                  homeController.dateFind!.value =
+                                      await showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime(2000),
+                                            lastDate: DateTime(3000),
+                                            builder: (context, child) {
+                                              return Theme(
+                                                data:
+                                                    Theme.of(context).copyWith(
+                                                  colorScheme:
+                                                      ColorScheme.light(
+                                                    primary: Colors.black,
+                                                    onPrimary: Colors.white,
+                                                    onSurface: Colors.black,
+                                                  ),
+                                                  textButtonTheme:
+                                                      TextButtonThemeData(
+                                                    style: TextButton.styleFrom(
+                                                      foregroundColor: Colors
+                                                          .black, // button text color
+                                                    ),
+                                                  ),
+                                                ),
+                                                child: child!,
+                                              );
+                                            },
+                                          ) ??
+                                          homeController.dateFind!.value;
+                                },
+                                icon: Icon(
+                                  Icons.calendar_month,
+                                  color: Colors.black,
+                                  size: 28,
+                                ),
                               ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
+                              Obx(
+                                () => Text(
+                                  "${homeController.dateFind!.value.day}/0${homeController.dateFind!.value.month}/${homeController.dateFind!.value.year}",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 18,
+                                  ),
+                                ),
                               ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
-                              ),
-                            ),
+                            ],
                           ),
                         ),
                         SizedBox(
@@ -152,6 +167,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                         TextField(
                           controller: amountc,
                           cursorColor: Colors.black,
+                          keyboardType: TextInputType.number,
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
@@ -417,16 +433,19 @@ class _IncomeScreenState extends State<IncomeScreen> {
                   onTap: () {
                     var c = homeController.selectedICategory.value;
                     var p = homeController.selectedIPaymentMethod.value;
+                    var d =
+                        "${homeController.dateFind!.value.day}/0${homeController.dateFind!.value.month}/${homeController.dateFind!.value.year}";
                     var status = 0;
                     DbHelper dbHelper = DbHelper();
                     dbHelper.insertData(
                       amount: amountc.text,
-                      date: datec.text,
+                      date: d,
                       category: c,
                       paymentmethod: p,
                       note: notec.text,
                       status: status,
                     );
+                    homeController.readData();
                     Get.back();
                   },
                   child: Container(
@@ -438,7 +457,7 @@ class _IncomeScreenState extends State<IncomeScreen> {
                     ),
                     alignment: Alignment.center,
                     child: Text(
-                      "Save Income",
+                      "Update Income",
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

@@ -10,11 +10,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  HomeController homeController = Get.put(
+    HomeController(),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    homeController.readData();
+  }
+
   @override
   Widget build(BuildContext context) {
-    HomeController homeController = Get.put(
-      HomeController(),
-    );
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.grey.shade300,
@@ -38,10 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                          },
                           icon: Icon(Icons.account_balance),
                           color: Colors.white,
-                          iconSize: 30,
+                          iconSize: 34,
                         ),
                         SizedBox(
                           width: 5,
@@ -61,19 +69,21 @@ class _HomeScreenState extends State<HomeScreen> {
                           },
                           icon: Icon(Icons.swap_horiz),
                           color: Colors.white,
-                          iconSize: 34,
+                          iconSize: 30,
                         ),
                       ],
                     ),
                     SizedBox(
                       height: 20,
                     ),
-                    Text(
-                      "₹ 131622.00",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
+                    Obx(
+                      () =>  Text(
+                        "₹ ${homeController.totalBalance.value} INR",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -123,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         children: [
                                           Icon(
                                             Icons.file_download_outlined,
-                                            color: Colors.black,
+                                            color: Colors.green,
                                             size: 24,
                                           ),
                                           SizedBox(
@@ -132,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           Text(
                                             "Income",
                                             style: TextStyle(
-                                              color: Colors.black,
+                                              color: Colors.green,
                                               fontSize: 18,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -146,12 +156,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                         padding: EdgeInsets.only(
                                           left: 4,
                                         ),
-                                        child: Text(
-                                          "₹ 130000.00",
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.bold,
+                                        child: Obx(
+                                          () => Text(
+                                            "₹ ${homeController.totalIncome.value} INR",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -177,9 +189,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Expanded(
                                         child: InkWell(
                                           onTap: () {
+                                            homeController.changeIIndex(0);
                                             Get.toNamed(
-                                              'tabbar_screen',
-                                              arguments: 0,
+                                              'itabbar_screen',
                                             );
                                           },
                                           child: Container(
@@ -248,7 +260,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           children: [
                                             Icon(
                                               Icons.file_upload_outlined,
-                                              color: Colors.black,
+                                              color: Colors.red,
                                               size: 24,
                                             ),
                                             SizedBox(
@@ -257,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             Text(
                                               "Expense",
                                               style: TextStyle(
-                                                color: Colors.black,
+                                                color: Colors.red,
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w500,
                                               ),
@@ -272,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             left: 4,
                                           ),
                                           child: Text(
-                                            "₹ 30000.00",
+                                            "₹ ${homeController.totalExpense.value} INR",
                                             style: TextStyle(
                                               color: Colors.black,
                                               fontSize: 22,
@@ -302,9 +314,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                         Expanded(
                                           child: InkWell(
                                             onTap: () {
+                                              homeController.changeIIndex(1);
                                               Get.toNamed(
-                                                'tabbar_screen',
-                                                arguments: 1,
+                                                'itabbar_screen',
                                               );
                                             },
                                             child: Container(
@@ -371,123 +383,155 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 8,
             ),
             Expanded(
               child: Container(
                 height: double.infinity,
                 width: double.infinity,
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: EdgeInsets.only(
-                        left: 15,
-                        right: 15,
-                        top: 5,
-                        bottom: 5,
-                      ),
-                      child: Container(
-                        height: 80,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color: Colors.white,
+                child: Obx(
+                  () => ListView.builder(
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: EdgeInsets.only(
+                          left: 15,
+                          right: 15,
+                          top: 5,
+                          bottom: 5,
                         ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: Row(
-                            children: [
-                              Container(
-                                height: double.infinity,
-                                width: 40,
-                                alignment: Alignment.center,
-                                child: Icon(
-                                  Icons.file_download_outlined,
-                                  color: Colors.green,
-                                  size: 35,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        child: InkWell(
+                          onTap: () {
+                            homeController.changeUDIndex(
+                                homeController.dataList[index]['status']);
+                            Get.toNamed(
+                              'udtabbar_screen',
+                              arguments: index,
+                            );
+                          },
+                          child: Container(
+                            height: 80,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Colors.white,
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: Row(
                                 children: [
-                                  Text(
-                                    "${homeController.dataList.value[index]['category']}",
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18,
-                                    ),
+                                  Container(
+                                    height: double.infinity,
+                                    width: 40,
+                                    alignment: Alignment.center,
+                                    child: homeController.dataList[index]
+                                                ['status'] ==
+                                            1
+                                        ? Icon(
+                                            Icons.file_upload_outlined,
+                                            color: Colors.red,
+                                            size: 35,
+                                          )
+                                        : Icon(
+                                            Icons.file_download_outlined,
+                                            color: Colors.green,
+                                            size: 35,
+                                          ),
                                   ),
                                   SizedBox(
-                                    height: 8,
+                                    width: 10,
                                   ),
-                                  Row(
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "${homeController.dataList.value[index]['paymentmethod']}",
+                                        "${homeController.dataList.value[index]['category']}",
                                         style: TextStyle(
                                           color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 18,
                                         ),
                                       ),
                                       SizedBox(
-                                        width: 5,
+                                        height: 8,
                                       ),
-                                      Icon(
-                                        Icons.fiber_manual_record,
-                                        color: Colors.black54,
-                                        size: 10,
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        "${homeController.dataList.value[index]['date']}",
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
-                                        ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${homeController.dataList.value[index]['paymentmethod']}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Icon(
+                                            Icons.fiber_manual_record,
+                                            color: Colors.black54,
+                                            size: 10,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "${homeController.dataList.value[index]['date']}",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: 15),
-                                  child: Container(
-                                    height: double.infinity,
-                                    width: double.infinity,
-                                    alignment: Alignment.topRight,
-                                    child: Text(
-                                      "+ ${homeController.dataList.value[index]['amount']} INR",
-                                      style: TextStyle(
-                                        color: Colors.green,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 15),
+                                      child: Container(
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        alignment: Alignment.topRight,
+                                        child: homeController.dataList[index]
+                                                    ['status'] ==
+                                                1
+                                            ? Text(
+                                                "₹ ${homeController.dataList.value[index]['amount']} INR",
+                                                style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15,
+                                                ),
+                                              )
+                                            : Text(
+                                                "₹ ${homeController.dataList.value[index]['amount']} INR",
+                                                style: TextStyle(
+                                                  color: Colors.green,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
                                       ),
                                     ),
                                   ),
-                                ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
-                  itemCount: homeController.dataList.length,
+                      );
+                    },
+                    itemCount: homeController.dataList.length,
+                  ),
                 ),
               ),
             ),
             SizedBox(
-              height: 10,
+              height: 8,
             ),
           ],
         ),

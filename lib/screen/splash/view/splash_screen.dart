@@ -31,10 +31,10 @@ class _SplashScreenState extends State<SplashScreen> {
               Icon(
                 Icons.account_balance,
                 color: Colors.white,
-                size: 120,
+                size: 130,
               ),
               SizedBox(
-                height: 8,
+                height: 1,
               ),
               Text(
                 "E - Passbook",

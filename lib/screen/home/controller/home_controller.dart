@@ -45,4 +45,51 @@ class HomeController extends GetxController {
     DbHelper dbHelper = DbHelper();
     dataList.value = await dbHelper.readData();
   }
+
+  RxInt iindex = 0.obs;
+
+  void changeIIndex(value) {
+    iindex.value = value;
+  }
+
+  RxInt udindex = 0.obs;
+
+  void changeUDIndex(value) {
+    udindex.value = value;
+  }
+
+  Rx<DateTime>? dateFind = DateTime.now().obs;
+
+  void deleteData(int id) {
+    DbHelper dbHelper = DbHelper();
+    dbHelper.deleteData(id: id);
+    readData();
+  }
+
+  // RxString incomeDataTotal = "".obs;
+  //
+  // Future<void> calculateIncomeBalance() async {
+  //   DbHelper dbHelper = DbHelper();
+  //   incomeDataTotal.value = await dbHelper.calculateIncomeBalance();
+  // }
+
+  RxInt totalBalance = 0.obs;
+  RxInt totalIncome = 0.obs;
+  RxInt totalExpense = 0.obs;
+
+  void balaceUpdate() {
+    int i = 0;
+    for (i = 0; i < dataList.length; i++) {
+      int status = dataList[i]['status'];
+      if (status == 0) {
+        int amount = int.parse(dataList[i]['amount']);
+        totalBalance.value = totalBalance.value + amount;
+        totalIncome.value = totalIncome.value + amount;
+      } else {
+        int amount = int.parse(dataList[i]['amount']);
+        totalBalance.value = totalBalance.value - amount;
+        totalExpense.value = totalExpense.value + amount;
+      }
+    }
+  }
 }

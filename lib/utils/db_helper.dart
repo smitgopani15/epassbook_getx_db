@@ -24,7 +24,7 @@ class DbHelper {
       onCreate: (db, version) {
         String query =
             "CREATE TABLE e_passbook (id INTEGER PRIMARY KEY AUTOINCREMENT,amount TEXT,date TEXT,category TEXT,paymentmethod TEXT,note TEXT,status INTEGER)";
-        db.execute(query,null);
+        db.execute(query, null);
       },
     );
   }
@@ -50,8 +50,23 @@ class DbHelper {
 
   Future<List<Map>> readData() async {
     database = await checkDb();
-    String query = "SELECT * FROM e_passbook";
+    String query = "SELECT * FROM e_passbook ORDER BY id DESC";
     List<Map> dataList = await database!.rawQuery(query);
     return dataList;
   }
+
+  Future<void> deleteData({required id}) async {
+    database = await checkDb();
+    database!.delete('e_passbook', where: "id=?", whereArgs: [id]);
+  }
+
+  // Future<String> calculateIncomeBalance() async {
+  //   database = await checkDb();
+  //   String query =
+  //       "SELECT SUM(amount) AS INT FROM e_passbook WHERE status = '0'";
+  //   var incomeDataTotal = await database!.rawQuery(query);
+  //   String string = incomeDataTotal.toString();
+  //   print(string);
+  //   return incomeDataTotal.toString();
+  // }
 }
