@@ -18,17 +18,16 @@ class _UDTabbarScreenState extends State<UDTabbarScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var index = Get.arguments;
     return DefaultTabController(
       length: 2,
-      initialIndex: homeController.udindex.value,
+      initialIndex: homeController.udIndex.value,
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black,
             title: Obx(
               () => Text(
-                homeController.udindex.value == 0
+                homeController.udIndex.value == 0
                     ? "Update Income"
                     : "Update Expense",
                 style: TextStyle(
@@ -42,8 +41,12 @@ class _UDTabbarScreenState extends State<UDTabbarScreen> {
                 padding: EdgeInsets.only(right: 18),
                 child: InkWell(
                   onTap: () {
-                    var id = homeController.dataList[index]['id'];
-                    homeController.deleteData(id);
+                    homeController.deleteData(
+                      homeController.udId.value,
+                    );
+                    homeController.calculateIncomeBalance();
+                    homeController.calculateExpenseBalance();
+                    // homeController.calculateTotalBalance();
                     Get.back();
                   },
                   child: Icon(
@@ -61,6 +64,9 @@ class _UDTabbarScreenState extends State<UDTabbarScreen> {
                 height: 15,
               ),
               TabBar(
+                onTap: (value) {
+                  homeController.udIndex.value = value;
+                },
                 indicatorPadding: EdgeInsets.only(
                   left: 20,
                   right: 20,

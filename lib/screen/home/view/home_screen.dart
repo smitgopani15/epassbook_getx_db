@@ -18,6 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     homeController.readData();
+    homeController.calculateIncomeBalance();
+    homeController.calculateExpenseBalance();
+    // homeController.calculateTotalBalance();
   }
 
   @override
@@ -45,8 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         IconButton(
-                          onPressed: () {
-                          },
+                          onPressed: () {},
                           icon: Icon(Icons.account_balance),
                           color: Colors.white,
                           iconSize: 34,
@@ -76,16 +78,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Obx(
-                      () =>  Text(
-                        "₹ ${homeController.totalBalance.value} INR",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 35,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    Text(
+                      "₹ 00 INR",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
+                    // Obx(
+                    //   () => Text(
+                    //     "₹ ${homeController.totalBalance.value} INR",
+                    //     style: TextStyle(
+                    //       color: Colors.white,
+                    //       fontSize: 35,
+                    //       fontWeight: FontWeight.bold,
+                    //     ),
+                    //   ),
+                    // ),
                     SizedBox(
                       height: 10,
                     ),
@@ -106,10 +116,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: Padding(
                               padding: EdgeInsets.only(
-                                left: 20,
+                                left: 15,
                                 top: 20,
-                                bottom: 30,
-                                right: 15,
+                                bottom: 25,
+                                right: 10,
                               ),
                               child: Container(
                                 height: double.infinity,
@@ -157,14 +167,24 @@ class _HomeScreenState extends State<HomeScreen> {
                                           left: 4,
                                         ),
                                         child: Obx(
-                                          () => Text(
-                                            "₹ ${homeController.totalIncome.value} INR",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
+                                          () => homeController
+                                                  .incomeDataTotal.isEmpty
+                                              ? Text(
+                                                  "₹ ${homeController.zero.value}0 INR",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 22,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                )
+                                              : Text(
+                                                  "₹ ${homeController.incomeDataTotal.value[0]['total_income']} INR",
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 22,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
                                         ),
                                       ),
                                       SizedBox(
@@ -226,10 +246,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: Padding(
                               padding: EdgeInsets.only(
-                                right: 20,
+                                right: 15,
                                 top: 20,
-                                bottom: 30,
-                                left: 15,
+                                bottom: 25,
+                                left: 10,
                               ),
                               child: Container(
                                 height: double.infinity,
@@ -283,13 +303,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                           padding: EdgeInsets.only(
                                             left: 4,
                                           ),
-                                          child: Text(
-                                            "₹ ${homeController.totalExpense.value} INR",
-                                            style: TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          child: Obx(
+                                            () => homeController
+                                                    .expenseDataTotal.isEmpty
+                                                ? Text(
+                                                    "₹ ${homeController.zero.value}0 INR",
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 22,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    "₹ ${homeController.expenseDataTotal.value[0]['total_expense']} INR",
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 22,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
                                           ),
                                         ),
                                         SizedBox(
@@ -401,8 +435,13 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         child: InkWell(
                           onTap: () {
+                            homeController.udId.value =
+                                homeController.dataList[index]['id'];
                             homeController.changeUDIndex(
                                 homeController.dataList[index]['status']);
+                            homeController.oldData(
+                              id: homeController.udId.value,
+                            );
                             Get.toNamed(
                               'udtabbar_screen',
                               arguments: index,

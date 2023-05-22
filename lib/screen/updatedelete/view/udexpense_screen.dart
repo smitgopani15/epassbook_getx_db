@@ -23,8 +23,12 @@ class _UDExpenseScreenState extends State<UDExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController amountc = TextEditingController();
-    TextEditingController notec = TextEditingController();
+    TextEditingController amountc = TextEditingController(
+      text: "${homeController.oldDataList.value[0]['amount']}",
+    );
+    TextEditingController notec = TextEditingController(
+      text: "${homeController.oldDataList.value[0]['note']}",
+    );
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -124,7 +128,7 @@ class _UDExpenseScreenState extends State<UDExpenseScreen> {
                               ),
                               Obx(
                                 () => Text(
-                                  "${homeController.dateFind!.value.day}/0${homeController.dateFind!.value.month}/${homeController.dateFind!.value.year}",
+                                  "${homeController.oldDataList.value[0]['date']}",
                                   style: TextStyle(
                                     color: Colors.black,
                                     fontWeight: FontWeight.w500,
@@ -191,11 +195,6 @@ class _UDExpenseScreenState extends State<UDExpenseScreen> {
                                 color: Colors.black,
                                 width: 1,
                               ),
-                            ),
-                            hintText: "Expense Amount",
-                            hintStyle: TextStyle(
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w500,
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
@@ -408,11 +407,6 @@ class _UDExpenseScreenState extends State<UDExpenseScreen> {
                                 width: 1,
                               ),
                             ),
-                            hintText: "Note...",
-                            hintStyle: TextStyle(
-                              color: Colors.black54,
-                              fontWeight: FontWeight.w500,
-                            ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide(
@@ -437,16 +431,20 @@ class _UDExpenseScreenState extends State<UDExpenseScreen> {
                         "${homeController.dateFind!.value.day}/0${homeController.dateFind!.value.month}/${homeController.dateFind!.value.year}";
                     var status = 1;
                     DbHelper dbHelper = DbHelper();
-                    dbHelper.insertData(
+                    dbHelper.updateData(
                       amount: amountc.text,
                       date: d,
                       category: c,
                       paymentmethod: p,
                       note: notec.text,
                       status: status,
+                      id: homeController.udId.value,
                     );
                     homeController.readData();
-
+                    homeController.calculateExpenseBalance();
+                    // homeController.calculateTotalBalance();
+                    homeController.resetECategory();
+                    homeController.resetEPaymentMethod();
                     Get.back();
                   },
                   child: Container(

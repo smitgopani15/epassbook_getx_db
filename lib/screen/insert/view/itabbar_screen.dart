@@ -20,14 +20,14 @@ class _ITabbarScreenState extends State<ITabbarScreen> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      initialIndex: homeController.iindex.value,
+      initialIndex: homeController.iIndex.value,
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.black,
             title: Obx(
               () => Text(
-                homeController.iindex.value == 0
+                homeController.iIndex.value == 0
                     ? "Insert Income"
                     : "Insert Expense",
                 style: TextStyle(
@@ -44,6 +44,9 @@ class _ITabbarScreenState extends State<ITabbarScreen> {
                 height: 15,
               ),
               TabBar(
+                onTap: (value) {
+                  homeController.iIndex.value = value;
+                },
                 indicatorPadding: EdgeInsets.only(
                   left: 20,
                   right: 20,
