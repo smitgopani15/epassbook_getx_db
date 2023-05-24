@@ -178,7 +178,6 @@ class HomeController extends GetxController {
     );
   }
 
-
   RxInt udId = 0.obs;
 
   void updateData({
@@ -213,34 +212,43 @@ class HomeController extends GetxController {
     readData();
   }
 
-  RxList incomeDataTotal = [].obs;
+  // RxList incomeDataTotal = [].obs;
+  //
+  // Future<void> calculateIncomeBalance() async {
+  //   DbHelper dbHelper = DbHelper();
+  //   incomeDataTotal.value = await dbHelper.calculateIncomeBalance();
+  // }
+  //
+  // RxList expenseDataTotal = [].obs;
+  //
+  // Future<void> calculateExpenseBalance() async {
+  //   DbHelper dbHelper = DbHelper();
+  //   expenseDataTotal.value = await dbHelper.calculateExpenseBalance();
+  // }
 
-  Future<List> calculateIncomeBalance() async {
+  RxList incomeDataTotal = [].obs;
+  RxList expenseDataTotal = [].obs;
+  RxInt totalBalance = 0.obs;
+  RxInt zero = 0.obs;
+
+  Future<void> calculateTotalBalance() async {
     DbHelper dbHelper = DbHelper();
     incomeDataTotal.value = await dbHelper.calculateIncomeBalance();
-    return incomeDataTotal;
-  }
-
-  RxList expenseDataTotal = [].obs;
-
-  Future<List> calculateExpenseBalance() async {
-    DbHelper dbHelper = DbHelper();
     expenseDataTotal.value = await dbHelper.calculateExpenseBalance();
-    return expenseDataTotal;
+    totalBalance.value = incomeDataTotal[0]['total_income'] -
+        expenseDataTotal[0]['total_expense'];
+    print(totalBalance.value);
+    // if (incomeDataTotal.isEmpty && expenseDataTotal.isEmpty) {
+    //   totalBalance.value = zero.value;
+    //   print(totalBalance.value);
+    //   return totalBalance.value;
+    // } else {
+    //   totalBalance.value = incomeDataTotal[0]['total_income'] -
+    //       expenseDataTotal[0]['total_expense'];
+    //   print(totalBalance.value);
+    //   return totalBalance.value;
+    // }
   }
-
-  RxInt totalBalance = 0.obs;
-  RxInt totalIncome = 0.obs;
-  RxInt totalExpense = 0.obs;
-
-  Future<RxInt> calculateTotalBalance() async {
-    totalIncome.value = incomeDataTotal.value[0]['total_income'];
-    totalExpense.value = expenseDataTotal.value[0]['total_expense'];
-    totalBalance.value = totalIncome.value - totalExpense.value;
-    return totalBalance;
-  }
-
-  RxInt zero = 0.obs;
 
   void filterIncomeExpense({
     required status,

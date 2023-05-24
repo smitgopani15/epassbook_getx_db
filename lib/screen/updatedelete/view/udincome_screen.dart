@@ -441,8 +441,7 @@ class _UDIncomeScreenState extends State<UDIncomeScreen> {
                       id: homeController.udId.value,
                     );
                     homeController.readData();
-                    homeController.calculateIncomeBalance();
-                    // homeController.calculateTotalBalance();
+                    homeController.calculateTotalBalance();
                     homeController.resetICategory();
                     homeController.resetIPaymentMethod();
                     Get.back();

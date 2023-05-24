@@ -447,8 +447,7 @@ class _IIncomeScreenState extends State<IIncomeScreen> {
                       status: status,
                     );
                     homeController.readData();
-                    homeController.calculateIncomeBalance();
-                    // homeController.calculateTotalBalance();
+                    homeController.calculateTotalBalance();
                     homeController.resetICategory();
                     homeController.resetDate();
                     homeController.resetIPaymentMethod();

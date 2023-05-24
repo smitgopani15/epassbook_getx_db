@@ -441,8 +441,7 @@ class _UDExpenseScreenState extends State<UDExpenseScreen> {
                       id: homeController.udId.value,
                     );
                     homeController.readData();
-                    homeController.calculateExpenseBalance();
-                    // homeController.calculateTotalBalance();
+                    homeController.calculateTotalBalance();
                     homeController.resetECategory();
                     homeController.resetEPaymentMethod();
                     Get.back();

@@ -44,9 +44,7 @@ class _UDTabbarScreenState extends State<UDTabbarScreen> {
                     homeController.deleteData(
                       homeController.udId.value,
                     );
-                    homeController.calculateIncomeBalance();
-                    homeController.calculateExpenseBalance();
-                    // homeController.calculateTotalBalance();
+                    homeController.calculateTotalBalance();
                     Get.back();
                   },
                   child: Icon(

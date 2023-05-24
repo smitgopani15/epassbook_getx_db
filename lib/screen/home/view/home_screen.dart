@@ -18,9 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     homeController.readData();
-    homeController.calculateIncomeBalance();
-    homeController.calculateExpenseBalance();
-    // homeController.calculateTotalBalance();
+    homeController.calculateTotalBalance();
   }
 
   @override
@@ -48,7 +46,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            homeController.calculateTotalBalance();
+                          },
                           icon: Icon(Icons.account_balance),
                           color: Colors.white,
                           iconSize: 34,
@@ -78,24 +78,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 20,
                     ),
-                    Text(
-                      "₹ 00 INR",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
+                    Obx(
+                      () => Text(
+                        "₹ ${homeController.totalBalance.value} INR",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 35,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    // Obx(
-                    //   () => Text(
-                    //     "₹ ${homeController.totalBalance.value} INR",
-                    //     style: TextStyle(
-                    //       color: Colors.white,
-                    //       fontSize: 35,
-                    //       fontWeight: FontWeight.bold,
-                    //     ),
-                    //   ),
-                    // ),
                     SizedBox(
                       height: 10,
                     ),

@@ -446,8 +446,7 @@ class _IExpenseScreenState extends State<IExpenseScreen> {
                       status: status,
                     );
                     homeController.readData();
-                    homeController.calculateExpenseBalance();
-                    // homeController.calculateTotalBalance();
+                    homeController.calculateTotalBalance();
                     homeController.resetECategory();
                     homeController.resetEPaymentMethod();
                     Get.back();
